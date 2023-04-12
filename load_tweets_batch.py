@@ -19,14 +19,12 @@ def remove_nulls(s):
     This helper function replaces the null characters with an escaped version so that they can be loaded into postgres.
     Technically, this means the data in postgres won't be an exact match of the data in twitter,
     and there is no way to get the original twitter data back from the data in postgres.
-
     The null character is extremely rarely used in real world text (approx. 1 in 1 billion tweets),
     and so this isn't too big of a deal.
     A more correct implementation, however, would be to *escape* the null characters rather than remove them.
     This isn't hard to do in python, but it is a bit of a pain to do with the JSON/COPY commands for the denormalized data.
     Since our goal is for the normalized/denormalized versions of the data to match exactly,
     we're not going to escape the strings for the normalized data.
-
     >>> remove_nulls('\x00')
     '\\x00'
     >>> remove_nulls('hello\x00 world')
@@ -37,13 +35,9 @@ def remove_nulls(s):
     else:
         return s.replace('\x00','\\x00')
 
-
-
-
 def batch(iterable, n=1):
     '''
     Group an iterable into batches of size n.
-
     >>> list(batch([1,2,3,4,5], 2))
     [[1, 2], [3, 4], [5]]
     >>> list(batch([1,2,3,4,5,6], 2))
@@ -66,24 +60,18 @@ def _bulk_insert_sql(table, rows):
     In particular, this function performs all of the work that doesn't require a database connection.
     We have separated it out into its own function so that we can use doctests to ensure it works correctly.
     In general, it is a good idea to separate the code that doesn't require a database connection from the code that does.
-
     The output is a 2-tuple.
     The first entry is the SQL text, and the second entry is the dictionary of bind parameters.
-
     >>> _bulk_insert_sql('test', [{'message': 'hello world', 'id': 5}])
     ('INSERT INTO test (message,id) VALUES (:message0,:id0) ON CONFLICT DO NOTHING', {'message0': 'hello world', 'id0': 5})
-
     >>> _bulk_insert_sql('test', [{'message': 'hello world', 'id': 5}, {'message': 'goodbye world', 'id':6}])[0]
     'INSERT INTO test (message,id) VALUES (:message0,:id0),(:message1,:id1) ON CONFLICT DO NOTHING'
-
     >>> _bulk_insert_sql('test', [{'message': 'hello world', 'id': 5}, {'message': 'goodbye world', 'id':6}])[1]
     {'message0': 'hello world', 'id0': 5, 'message1': 'goodbye world', 'id1': 6}
-
     >>> _bulk_insert_sql('test', [{'message': 'hello world', 'id': 5}, {'id':6}])
     Traceback (most recent call last):
       ...
     ValueError: All dictionaries must contain the same keys
-
     >>> _bulk_insert_sql('test', [])
     Traceback (most recent call last):
       ...
@@ -140,7 +128,6 @@ def insert_tweets(connection, tweets, batch_size=1000):
     '''
     Efficiently inserts many tweets into the database.
     The tweets iterator is chuncked into batches before insertion.
-
     Args:
         connection: a sqlalchemy connection to the postgresql db
         input_tweets: a list of dictionaries representing the json tweet objects
@@ -153,7 +140,6 @@ def insert_tweets(connection, tweets, batch_size=1000):
 def _insert_tweets(connection,input_tweets):
     '''
     Inserts a single batch of tweets into the database.
-
     NOTE:
     The Python convention is that functions beginning with an underscore  are internal helper functions.
     They are not intended to be a stable interface,
@@ -398,7 +384,6 @@ def _insert_tweets(connection,input_tweets):
             '''
             )
     res = connection.execute(sql, { key+str(i):value for i,tweet in enumerate(tweets) for key,value in tweet.items() })
-
 
 if __name__ == '__main__':
 
