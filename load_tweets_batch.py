@@ -1,3 +1,4 @@
+
 #!/usr/bin/python3
 
 # imports
@@ -159,9 +160,9 @@ def _insert_tweets(connection,input_tweets):
     tweet_media = []
     tweet_urls = []
 
-    ######################################## 
+    ########################################
     # STEP 1: generate the lists
-    ######################################## 
+    ########################################
     for tweet in input_tweets:
 
         ########################################
@@ -315,8 +316,8 @@ def _insert_tweets(connection,input_tweets):
         ########################################
 
         try:
-            hashtags = tweet['extended_tweet']['entities']['hashtags'] 
-            cashtags = tweet['extended_tweet']['entities']['symbols'] 
+            hashtags = tweet['extended_tweet']['entities']['hashtags']
+            cashtags = tweet['extended_tweet']['entities']['symbols']
         except KeyError:
             hashtags = tweet['entities']['hashtags']
             cashtags = tweet['entities']['symbols']
@@ -349,9 +350,9 @@ def _insert_tweets(connection,input_tweets):
                 'type':medium['type']
                 })
 
-    ######################################## 
+    ########################################
     # STEP 2: perform the actual SQL inserts
-    ######################################## 
+    ########################################
     #with connection.begin() as trans:
 
         # use the bulk_insert function to insert most of the data
@@ -407,7 +408,7 @@ if __name__ == '__main__':
     # which prevents excessive dead tuples and autovacuums
     with connection.begin() as trans:
         for filename in sorted(args.inputs, reverse=True):
-            with zipfile.ZipFile(filename, 'r') as archive: 
+            with zipfile.ZipFile(filename, 'r') as archive:
                 print(datetime.datetime.now(),filename)
                 for subfilename in sorted(archive.namelist(), reverse=True):
                     with io.TextIOWrapper(archive.open(subfilename)) as f:
