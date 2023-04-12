@@ -13,7 +13,7 @@
 ![](https://github.com/Aser-Abdelfatah/twitter_postgres_parallel/workflows/tests_denormalized_parallel/badge.svg)
 
 In this assignment, you will make your data loading into postgres significantly faster using batch loading and parallel loading.
-Notice that many of the test cases above are already passing;
+ Notice that many of the test cases above are already passing;
 you will have to ensure that they remain passing as you complete the tasks below.
 
 ## Tasks
